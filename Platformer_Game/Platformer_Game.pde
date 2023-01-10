@@ -19,8 +19,6 @@ void setup() {
  world = new FWorld(-2000,-2000, 2000, 2000);
  world.setGravity(0, 900);
  map = loadImage("map.png");
- 
- s
 }
 
 void draw() {
