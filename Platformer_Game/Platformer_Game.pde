@@ -17,7 +17,6 @@ boolean upkey, downkey, leftkey, rightkey, wkey, akey, skey, dkey, qkey, ekey, s
 FPlayer player;
 
 
-
 void setup() {
   size(1000, 1000);
   Fisica.init(this);
@@ -56,11 +55,22 @@ void draw() {
   player.act();
 }
 
-void drawWorld() {
+void drawWorld() { 
  pushMatrix();
  translate(-player.getX()*zoom+width/2, -player.getY()*zoom+height/2);
  scale(zoom);
  world.step();
  world.draw();
  popMatrix();
+}
+
+boolean touchingGround(FBox ground) {
+  ArrayList<FContact> contactList = player.getContacts();
+  int i = 0;
+  while (i < contactList.size()) {
+   FContact myContact = contactList.get(i);
+   if (myContact.contains(ground))
+    i++;
+  }
+  
 }
