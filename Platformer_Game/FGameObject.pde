@@ -21,4 +21,4 @@ class FGameObject extends FBox {
     }
     return false;
   }
-}//
+}

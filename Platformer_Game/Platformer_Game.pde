@@ -23,8 +23,9 @@ color orange = #F0A000;
 color brown = #996633;
 
 color pink = #e992db; //goomba
-color gray = #e992db; //wall
+color gray = #5b5b5b; //wall
 
+color lavacolor = #ffa6a6;
 //Images --------------
 
 //terrain images
@@ -35,7 +36,7 @@ PImage[] idle;
 PImage[] jump;
 PImage[] run;
 PImage[] action;
-
+PImage[] lava;
 PImage[] goomba;
 
 //map controls
@@ -86,6 +87,21 @@ void loadImages() {
   run[1] = loadImage("runright1.png");
   run[2] = loadImage("runright2.png");
 
+//lava ---------------------
+  lava = new PImage[6];
+  lava[0] = loadImage("lava0.png");
+  lava[0].resize(gridSize, gridSize);
+  lava[1] = loadImage("lava1.png");
+  lava[1].resize(gridSize, gridSize);
+  lava[2] = loadImage("lava2.png");
+  lava[2].resize(gridSize, gridSize);
+  lava[3] = loadImage("lava3.png");
+  lava[3].resize(gridSize, gridSize);
+  lava[4] = loadImage("lava4.png");
+  lava[4].resize(gridSize, gridSize);
+  lava[5] = loadImage("lava5.png");
+  lava[5].resize(gridSize, gridSize);
+  
   action = idle;
 
   //goombas ------------------------
@@ -98,7 +114,7 @@ void loadImages() {
 
 void loadWorld(PImage img) {
   world = new FWorld(-4600, -4600, 4600, 4600);
-  world.setGravity(0, 981); //900
+  world.setGravity(0, 981);
 
   for (int y = 0; y < img.height; y++) {
     for (int x = 0; x < img.width; x++) {
@@ -112,85 +128,85 @@ void loadWorld(PImage img) {
         b.setFriction(4);
         b.setName("stone");
         world.add(b);
-      }
-      if (c == cyan) { //ice block
+        
+      } else if (c == gray) { //wall for goombas
+        b.attachImage(stone);
+        b.setFriction(4);
+        b.setName("wall");
+        world.add(b);
+        
+      } else if (c == cyan) { //ice block
         b.attachImage(ice);
         b.setFriction(0);
         b.setName("ice");
         world.add(b);
-      }
-
-      if (c == treeTrunkBrown) { //tree trunk
+        
+      } else if (c == treeTrunkBrown) { //tree trunk
         b.attachImage(treeTrunk);
         b.setFriction(2);
         b.setName("treeTrunk");
         world.add(b);
-      }
-
-      if (c == centerGreen) { //tree intersect
+        
+      } else if (c == centerGreen) { //tree intersect
         b.attachImage(centerGreenLeaves);
         b.setFriction(2);
         b.setName("centerGreenLeaves");
         world.add(b);
-      }
-
-      if (c == middleGreen) { //tree middle
+        
+      } else if (c == middleGreen) { //tree middle
         b.attachImage( middleGreenLeaves);
         b.setFriction(2);
         b.setName("middleGreenLeaves");
         world.add(b);
-      }
-
-      if (c == westGreen) { //tree leftside
+        
+      } else if (c == westGreen) { //tree leftside
         b.attachImage(leftGreenLeaves);
         b.setFriction(2);
         b.setName("leftGreenLeaves");
         world.add(b);
-      }
-
-      if (c == eastGreen) { //tree rightside
+        
+      } else if (c == eastGreen) { //tree rightside
         b.attachImage(rightGreenLeaves);
         b.setFriction(2);
         b.setName("rightGreenLeaves");
         world.add(b);
-      }
-
-      if (c == purple) { //spikes
+        
+      } else if (c == purple) { //spikes
         FSpikes sp = new FSpikes(x*gridSize, y*gridSize);
         b.attachImage(spikes);
         b.setFriction(8);
         b.setName("spikes");
         terrain.add(sp);
         world.add(sp);
-      }
-
-      if (c == aqua) { //trampoline
+        
+      } else if (c == lavacolor) { //lava
+        FLava lav = new FLava(x*gridSize, y*gridSize);
+        b.attachImage(spikes);
+        b.setFriction(8);
+        b.setName("lava");
+        terrain.add(lav);
+        world.add(lav);
+        
+      } else if (c == aqua) { //trampoline
         b.attachImage(trampoline);
         b.setFriction(0);
         b.setRestitution(2);
         b.setName("trampoline");
         world.add(b);
-      }
-
-      if (c == yellow) { //bridge
+        
+      } else if (c == yellow) { //bridge
         FBridge br = new FBridge(x*gridSize, y*gridSize);
         b.attachImage(bridge);
         b.setFriction(4);
         b.setName("bridge");
         terrain.add(br);
         world.add(br);
-      }
-
-      if (c == pink) {
+        
+      } else if (c == pink) {
         FGoomba gmb = new FGoomba(x*gridSize, y*gridSize);
-        enemies.add(gmb);
+        b.setName("goomba");
+        //enemies.add(gmb);
         world.add(gmb);
-      }
-
-      if (c == gray) {
-        b.attachImage(stone);
-        b.setName("wall");
-        world.add(b);
       }
     }
   }
@@ -203,7 +219,7 @@ void loadPlayer() {
 
 
 void draw() {
-  background(white);
+  background(black);
   drawWorld();
   actWorld();
 }
@@ -214,10 +230,10 @@ void actWorld() {
     FGameObject t = terrain.get(i);
     t.act();
   }
-  for (int i = 0; i < enemies.size(); i++) {
-    FGameObject e = enemies.get(i);
-    e.act();
-  }
+  //for (int i = 0; i < enemies.size(); i++) {
+  //  FGameObject e = enemies.get(i);
+  //  e.act();
+  //}
 }
 
 void drawWorld() {
@@ -228,49 +244,3 @@ void drawWorld() {
   world.draw();
   popMatrix();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//boolean touchingGround(FBox) {
-//  ArrayList<FContact> contactList = player.getContacts();
-//  int i = 0;
-//  while (i < contactList.size()) {
-//   FContact myContact = contactList.get(i);
-//   if (myContact.contains(ground))
-//    i++;
-//  }
-
-//}
