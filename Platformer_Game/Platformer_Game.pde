@@ -1,3 +1,10 @@
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
 //Alex Chapman
 
 import fisica.*;
@@ -53,10 +60,19 @@ ArrayList<FGameObject> terrain;
 ArrayList<FGameObject> enemies;
 FPlayer player;
 
+//music
+Minim minim;
+AudioPlayer THEME;
+
+
 void setup() { ////////////////////////////////////////////////////
   size(1000, 1000);
   Fisica.init(this);
   terrain = new ArrayList<FGameObject>();
+  //music
+  minim = new Minim(this);
+  THEME = minim.loadFile("C418 - Subwoofer Lullaby.mp3");
+  
   loadImages();
   loadWorld(map);
   loadPlayer();
@@ -128,6 +144,7 @@ void loadWorld(PImage img) {
       if (c == black) { //stone block
         b.attachImage(stone);
         b.setFriction(4);
+        b.setGrabbable(false);
         b.setName("stone");
         world.add(b);
         
@@ -146,6 +163,7 @@ void loadWorld(PImage img) {
       } else if (c == treeTrunkBrown) { //tree trunk
         b.attachImage(treeTrunk);
         b.setFriction(2);
+        b.setSensor(true);
         b.setName("treeTrunk");
         world.add(b);
         
@@ -207,7 +225,7 @@ void loadWorld(PImage img) {
       } else if (c == pink) {
         FGoomba gmb = new FGoomba(x*gridSize, y*gridSize);
         b.setName("goomba");
-        //enemies.add(gmb);
+        // enemies.add(gmb);
         world.add(gmb);
       }
     }
@@ -222,6 +240,7 @@ void loadPlayer() {
 
 void draw() {
   background(black);
+  THEME.play();
   drawWorld();
   actWorld();
 }
